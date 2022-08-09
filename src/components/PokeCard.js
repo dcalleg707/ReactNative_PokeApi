@@ -1,8 +1,8 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export default ({ pokeUrl, setPokemon }) => {
+export default ({ pokeUrl, setSelectedPokemon }) => {
 
     const [pokeData, setPokeData] = useState({});
 
@@ -17,17 +17,17 @@ export default ({ pokeUrl, setPokemon }) => {
                 })
             })
             .catch(err => console.log(err))
-    }, [setPokeData])
+    }, [pokeUrl, setPokeData])
 
     return (
-        <View>
+        <TouchableOpacity onPress={() => setSelectedPokemon(pokeUrl)}>
             <Image
                 source={{ uri: pokeData.imageUrl }}
                 style={Styles.pokeImage}
             />
             <Text>#{pokeData.id}</Text>
             <Text>{pokeData?.name}</Text>
-        </View>
+        </TouchableOpacity>
 
     )
 }
