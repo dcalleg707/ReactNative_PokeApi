@@ -13,26 +13,31 @@ export default ({ pokeUrl, setSelectedPokemon }) => {
                 setPokeData({
                     name: data.name,
                     id: data.id,
-                    imageUrl: data.sprites["front_default"],
+                    imageUrl: data.sprites.other["official-artwork"].front_default,
                 })
             })
             .catch(err => console.log(err))
     }, [pokeUrl, setPokeData])
 
     return (
-        <TouchableOpacity onPress={() => setSelectedPokemon(pokeUrl)}>
+        <TouchableOpacity style={Styles.cardContainer} onPress={() => setSelectedPokemon(pokeUrl)}>
             <Image
                 source={{ uri: pokeData.imageUrl }}
                 style={Styles.pokeImage}
             />
-            <Text>#{pokeData.id}</Text>
-            <Text>{pokeData?.name}</Text>
+            <Text >#{pokeData.id}</Text>
+            <Text >{pokeData?.name}</Text>
         </TouchableOpacity>
 
     )
 }
 
 const Styles = StyleSheet.create({
-    pokeImage: { width: 50, height: 50 }
+    pokeImage: { width: 50, height: 50 },
+    cardContainer: {
+        width: "50%",
+        textAlign: "center",
+        alignItems: "center",
+    },
 })
 

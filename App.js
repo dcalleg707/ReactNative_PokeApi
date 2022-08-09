@@ -1,9 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
 import { POKEMON_API_URL } from '@env';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import PokeCard from '@components/PokeCard';
+import PokeDetails from '@components/PokeDetails';
 
 export default function App() {
   const [pokemon, setPokemon] = useState([]);
@@ -14,15 +14,14 @@ export default function App() {
 
   const changePokemons = (url) => {
     if (!url) return;
-
+    console.log(url)
     axios.get(url)
       .then(res => {
-        console.log(res.data.results)
         setPokemon(res.data.results);
         setNext(res.data.next);
         setPrev(res.data.previous);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err.response))
   }
 
   useEffect(() => {
@@ -37,20 +36,23 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Listado Pokemón</Text>
-      <View>
-        <View>
-          <TextInput placeholder="Buscar Pokemón" />
-          <View>
+      <View style={styles.pokemonGrid}>
+        <View style={selectedPokemon ? styles.cardsContainerSmall : null}>
+          <TextInput style={styles.searchBar} placeholder="Buscar Pokemón" />
+          <View style={styles.cardsContainer}>
             {pokeCards}
           </View>
         </View>
-        <View>
-          <Text>{selectedPokemon}</Text>
-        </View>
+        {selectedPokemon ?
+          <View style={styles.detailsContainer}>
+            <TouchableOpacity style={styles.closeDetails} onPress={() => setSelectedPokemon("")}>
+              <Text>x</Text>
+            </TouchableOpacity>
+            <PokeDetails pokeUrl={selectedPokemon} />
+          </View>
+          : null}
       </View>
-
-
-      <View>
+      <View style={styles.buttonsContainer}>
         <Button
           onPress={() => changePokemons(prev)}
           title="previous"
@@ -73,4 +75,47 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  cardsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-evenly',
+    marginHorizontal: "auto",
+    width: "100%",
+  },
+  cardsContainerSmall: {
+    width: "60%",
+  },
+  searchBar: {
+    width: "90%",
+    alignSelf: "center",
+    padding: 10,
+    backgroundColor: "lightgray",
+  },
+  buttonsContainer: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 20,
+  },
+  pokemonGrid: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 20,
+  },
+  detailsContainer: {
+    width: "30%",
+    marginRight: "10%",
+  },
+  closeDetails: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    backgroundColor: "lightgray",
+    paddingHorizontal: 5,
+    zIndex: 1,
+  }
+
 });
