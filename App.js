@@ -14,7 +14,7 @@ export default function App() {
   const [selectedPokemon, setSelectedPokemon] = useState(null)
   const [search, setSearch] = useState('');
 
-  const changePokemons = async (url) => {
+  const changePokemons = url => {
     if (!url) return;
     axios.get(url)
       .then(res => {
@@ -26,6 +26,18 @@ export default function App() {
       .then(allData => allData.map(pokeData => getPokemonData(pokeData.data)))
       .then(filteredData => setPokemon(filteredData))
       .catch(err => console.log(err.response))
+  }
+
+  const searchPokemon = pokemonName => {
+    pokemonName = pokemonName.toLowerCase();
+    axios.get(`${POKEMON_API_URL}/pokemon/${pokemonName}`)
+      .then(res => getPokemonData(res.data))
+      .then(pokeData => setSelectedPokemon(pokeData))
+      .catch(err => {
+        if (err.response.status === 404) {
+          alert('El pokemon ingresado no existe, revise que haya escrito el nombre correctamente');
+        }
+      })
   }
 
   useEffect(() => {
@@ -41,7 +53,11 @@ export default function App() {
       <Text>Listado Pokemón</Text>
       <View style={styles.pokemonGrid}>
         <View style={selectedPokemon ? styles.cardsContainerSmall : null}>
-          <TextInput style={styles.searchBar} placeholder="Buscar Pokemón" />
+          <TextInput
+            style={styles.searchBar}
+            placeholder="Buscar Pokemón"
+            onChangeText={text => setSearch(text)}
+            onEndEditing={() => searchPokemon(search)} />
           <View style={styles.cardsContainer}>
             {pokeCards}
           </View>
