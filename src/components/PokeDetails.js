@@ -10,13 +10,13 @@ export default ({ pokeData, setSelectedPokemon }) => {
     const sprites = pokeData.sprites?.map((spriteUrl, index) =>
         <Image
             source={{ uri: spriteUrl }}
-            style={styles.pokeImage}
+            style={styles.pokeSprite}
             key={index}
         />
     )
 
     return (
-        <View>
+        <View style={styles.detailsContainer}>
             <TouchableOpacity style={styles.closeDetails} onPress={() => setSelectedPokemon(null)}>
                 <Text>x</Text>
             </TouchableOpacity>

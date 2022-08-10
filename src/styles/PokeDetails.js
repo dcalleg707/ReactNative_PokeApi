@@ -2,7 +2,14 @@ import { StyleSheet } from "react-native";
 
 
 const styles = StyleSheet.create({
-    pokeImage: { width: 50, height: 50 },
+    pokeImage: {
+        width: 90,
+        height: 90
+    },
+    pokeSprite: {
+        width: 60,
+        height: 60,
+    },
     cardContainer: {
         width: "100%",
         textAlign: "center",
@@ -19,6 +26,10 @@ const styles = StyleSheet.create({
     },
     title: {
         fontWeight: "bold"
+    },
+    detailsContainer: {
+        backgroundColor: "pink",
+        padding: 10,
     }
 })
 

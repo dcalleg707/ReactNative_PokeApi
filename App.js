@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, Button, SafeAreaView, Alert } from 'react-native';
 import { POKEMON_API_URL } from '@env';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -35,7 +35,8 @@ export default function App() {
       .then(pokeData => setSelectedPokemon(pokeData))
       .catch(err => {
         if (err.response.status === 404) {
-          alert('El pokemon ingresado no existe, revise que haya escrito el nombre correctamente');
+          Alert.alert('Pokemon no encontrado', 'El pokemon que buscas no existe')
+          setSearch('')
         }
       })
   }
@@ -49,37 +50,40 @@ export default function App() {
   )
 
   return (
-    <View style={styles.container}>
-      <Text>Listado Pokemón</Text>
-      <View style={styles.pokemonGrid}>
-        <View style={selectedPokemon ? styles.cardsContainerSmall : null}>
-          <TextInput
-            style={styles.searchBar}
-            placeholder="Buscar Pokemon"
-            onChangeText={text => setSearch(text)}
-            onEndEditing={() => searchPokemon(search)} />
-          <View style={styles.cardsContainer}>
-            {pokeCards}
+    <SafeAreaView style={styles.wrapper}>
+      <View style={styles.container}>
+        <Text style={styles.mainTitle}>Listado Pokemón</Text>
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Buscar Pokemon"
+          value={search}
+          onChangeText={text => setSearch(text)}
+          onEndEditing={() => searchPokemon(search)} />
+        <View style={styles.pokemonGrid}>
+          <View style={[styles.cardsWrapper, selectedPokemon ? styles.cardsContainerSmall : null]}>
+            <View style={styles.cardsContainer}>
+              {pokeCards}
+            </View>
           </View>
+          {selectedPokemon ?
+            <View style={styles.detailsContainer}>
+              <PokeDetails pokeData={selectedPokemon} setSelectedPokemon={setSelectedPokemon} />
+            </View>
+            : null}
         </View>
-        {selectedPokemon ?
-          <View style={styles.detailsContainer}>
-            <PokeDetails pokeData={selectedPokemon} setSelectedPokemon={setSelectedPokemon} />
-          </View>
-          : null}
+        <View style={styles.buttonsContainer}>
+          <Button
+            onPress={() => changePokemons(prev)}
+            title="previous"
+            color="#ff0000"
+          />
+          <Button
+            onPress={() => changePokemons(next)}
+            title="next"
+            color="#ff0000"
+          />
+        </View>
       </View>
-      <View style={styles.buttonsContainer}>
-        <Button
-          onPress={() => changePokemons(prev)}
-          title="previous"
-          color="#4290f5"
-        />
-        <Button
-          onPress={() => changePokemons(next)}
-          title="next"
-          color="#4290f5"
-        />
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }
