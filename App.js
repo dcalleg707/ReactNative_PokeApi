@@ -77,12 +77,12 @@ export default function App() {
           <Button
             onPress={() => changePokemons(prev)}
             title="previous"
-            color="#ff0000"
+            color="#00ace6"
           />
           <Button
             onPress={() => changePokemons(next)}
             title="next"
-            color="#ff0000"
+            color="#00ace6"
           />
         </View>
       </View>
