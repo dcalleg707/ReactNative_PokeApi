@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import PokeCard from '@components/PokeCard';
 import PokeDetails from '@components/PokeDetails';
+import { getPokemonData } from '@utils';
 
 export default function App() {
   const [pokemon, setPokemon] = useState([]);
@@ -12,42 +13,23 @@ export default function App() {
   const [selectedPokemon, setSelectedPokemon] = useState(null)
   const [search, setSearch] = useState('');
 
-  const getPokemonData = pokeData => {
-    return {
-      name: pokeData.name,
-      id: pokeData.id,
-      imageUrl: pokeData.sprites.other["official-artwork"].front_default ?? "",
-      types: pokeData.types.map(type => type.type.name),
-      weight: pokeData.weight,
-      moves: pokeData.moves.slice(0, 4).map(move => move.move.name)
-    }
-  }
-
   const changePokemons = async (url) => {
     if (!url) return;
-    const pokeUrls = await axios.get(url)
+    axios.get(url)
       .then(res => {
         setNext(res.data.next);
         setPrev(res.data.previous);
         return res.data.results
       })
+      .then(results => Promise.all(results.map(result => axios.get(result.url))))
+      .then(allData => allData.map(pokeData => getPokemonData(pokeData.data)))
+      .then(filteredData => setPokemon(filteredData))
       .catch(err => console.log(err.response))
-
-    const pokemonPromises = []
-    pokeUrls.forEach(pokeUrl => {
-      const pokemonAllData = axios.get(pokeUrl.url)
-      pokemonPromises.push(pokemonAllData)
-    })
-
-    Promise.all(pokemonPromises)
-      .then(res => res.map(pokeData => getPokemonData(pokeData.data)))
-      .then(res => setPokemon(res))
   }
 
   useEffect(() => {
     changePokemons(`${POKEMON_API_URL}pokemon/?limit=4`)
   }, [setPokemon, setNext, setPrev])
-
 
   const pokeCards = pokemon.map((item, index) =>
     <PokeCard pokeData={item} setSelectedPokemon={setSelectedPokemon} key={index} />
@@ -65,10 +47,7 @@ export default function App() {
         </View>
         {selectedPokemon ?
           <View style={styles.detailsContainer}>
-            <TouchableOpacity style={styles.closeDetails} onPress={() => setSelectedPokemon(null)}>
-              <Text>x</Text>
-            </TouchableOpacity>
-            <PokeDetails pokeData={selectedPokemon} />
+            <PokeDetails pokeData={selectedPokemon} setSelectedPokemon={setSelectedPokemon} />
           </View>
           : null}
 
@@ -130,13 +109,4 @@ const styles = StyleSheet.create({
     width: "30%",
     marginRight: "10%",
   },
-  closeDetails: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    backgroundColor: "lightgray",
-    paddingHorizontal: 5,
-    zIndex: 1,
-  }
-
 });

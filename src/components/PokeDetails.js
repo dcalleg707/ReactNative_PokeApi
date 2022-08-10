@@ -1,18 +1,21 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export default ({ pokeData }) => {
+export default ({ pokeData, setSelectedPokemon }) => {
 
     const types = pokeData.types?.reduce((prev, cur) => prev + " " + cur, "")
     const moves = pokeData.moves?.reduce((prev, cur) => prev + " " + cur, "")
 
     return (
-        <View style={Styles.detailsContainer}>
-            <View style={Styles.cardContainer} >
+        <View style={styles.detailsContainer}>
+            <TouchableOpacity style={styles.closeDetails} onPress={() => setSelectedPokemon(null)}>
+                <Text>x</Text>
+            </TouchableOpacity>
+            <View style={styles.cardContainer} >
                 <Image
                     source={{ uri: pokeData.imageUrl }}
-                    style={Styles.pokeImage}
+                    style={styles.pokeImage}
                 />
                 <Text >#{pokeData.id}</Text>
                 <Text >{pokeData?.name}</Text>
@@ -29,7 +32,7 @@ export default ({ pokeData }) => {
     )
 }
 
-const Styles = StyleSheet.create({
+const styles = StyleSheet.create({
     pokeImage: { width: 50, height: 50 },
     cardContainer: {
         width: "100%",
@@ -37,6 +40,13 @@ const Styles = StyleSheet.create({
         alignItems: "center",
         alignSelf: "center",
     },
-
+    closeDetails: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        backgroundColor: "lightgray",
+        paddingHorizontal: 5,
+        zIndex: 1,
+    }
 })
 
