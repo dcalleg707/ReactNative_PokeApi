@@ -16,6 +16,9 @@ const styles = StyleSheet.create({
         backgroundColor: "lightgray",
         paddingHorizontal: 5,
         zIndex: 1,
+    },
+    title: {
+        fontWeight: "bold"
     }
 })
 
