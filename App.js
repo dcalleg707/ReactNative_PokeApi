@@ -9,19 +9,39 @@ export default function App() {
   const [pokemon, setPokemon] = useState([]);
   const [next, setNext] = useState('');
   const [prev, setPrev] = useState('');
-  const [selectedPokemon, setSelectedPokemon] = useState('')
+  const [selectedPokemon, setSelectedPokemon] = useState(null)
   const [search, setSearch] = useState('');
 
-  const changePokemons = (url) => {
+  const getPokemonData = pokeData => {
+    return {
+      name: pokeData.name,
+      id: pokeData.id,
+      imageUrl: pokeData.sprites.other["official-artwork"].front_default ?? "",
+      types: pokeData.types.map(type => type.type.name),
+      weight: pokeData.weight,
+      moves: pokeData.moves.slice(0, 4).map(move => move.move.name)
+    }
+  }
+
+  const changePokemons = async (url) => {
     if (!url) return;
-    console.log(url)
-    axios.get(url)
+    const pokeUrls = await axios.get(url)
       .then(res => {
-        setPokemon(res.data.results);
         setNext(res.data.next);
         setPrev(res.data.previous);
+        return res.data.results
       })
       .catch(err => console.log(err.response))
+
+    const pokemonPromises = []
+    pokeUrls.forEach(pokeUrl => {
+      const pokemonAllData = axios.get(pokeUrl.url)
+      pokemonPromises.push(pokemonAllData)
+    })
+
+    Promise.all(pokemonPromises)
+      .then(res => res.map(pokeData => getPokemonData(pokeData.data)))
+      .then(res => setPokemon(res))
   }
 
   useEffect(() => {
@@ -30,7 +50,7 @@ export default function App() {
 
 
   const pokeCards = pokemon.map((item, index) =>
-    <PokeCard pokeUrl={item.url} setSelectedPokemon={setSelectedPokemon} key={index} />
+    <PokeCard pokeData={item} setSelectedPokemon={setSelectedPokemon} key={index} />
   )
 
   return (
@@ -45,12 +65,13 @@ export default function App() {
         </View>
         {selectedPokemon ?
           <View style={styles.detailsContainer}>
-            <TouchableOpacity style={styles.closeDetails} onPress={() => setSelectedPokemon("")}>
+            <TouchableOpacity style={styles.closeDetails} onPress={() => setSelectedPokemon(null)}>
               <Text>x</Text>
             </TouchableOpacity>
-            <PokeDetails pokeUrl={selectedPokemon} />
+            <PokeDetails pokeData={selectedPokemon} />
           </View>
           : null}
+
       </View>
       <View style={styles.buttonsContainer}>
         <Button
