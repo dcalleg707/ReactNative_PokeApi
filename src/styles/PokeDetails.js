@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     detailsContainer: {
         backgroundColor: "#cc99ff",
         padding: 10,
-    }
+    },
 })
 
 export default styles

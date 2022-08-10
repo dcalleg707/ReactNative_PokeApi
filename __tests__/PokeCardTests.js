@@ -15,7 +15,7 @@ describe('App', () => {
     });
 });
 
-test('Sets the new select pokemon on click', () => {
+test('Sets the new selectedPokemon on press', () => {
     const mockFn = jest.fn();
     render(<PokeCard pokeData={pokemonData} setSelectedPokemon={mockFn} />);
     fireEvent.press(screen.getByText("#" + pokemonData.id));
