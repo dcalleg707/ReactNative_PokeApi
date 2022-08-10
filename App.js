@@ -55,7 +55,7 @@ export default function App() {
         <View style={selectedPokemon ? styles.cardsContainerSmall : null}>
           <TextInput
             style={styles.searchBar}
-            placeholder="Buscar Pokemón"
+            placeholder="Buscar Pokemon"
             onChangeText={text => setSearch(text)}
             onEndEditing={() => searchPokemon(search)} />
           <View style={styles.cardsContainer}>
