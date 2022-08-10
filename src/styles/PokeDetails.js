@@ -9,6 +9,9 @@ const styles = StyleSheet.create({
     pokeSprite: {
         width: 60,
         height: 60,
+        backgroundColor: "white",
+        borderRadius: 200,
+        margin: 1,
     },
     cardContainer: {
         width: "100%",
@@ -20,7 +23,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 0,
         right: 0,
-        backgroundColor: "lightgray",
+        backgroundColor: "#b366ff",
         paddingHorizontal: 5,
         zIndex: 1,
     },
@@ -28,7 +31,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     },
     detailsContainer: {
-        backgroundColor: "pink",
+        backgroundColor: "#cc99ff",
         padding: 10,
     }
 })

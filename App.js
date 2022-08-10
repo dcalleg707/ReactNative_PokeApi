@@ -46,19 +46,21 @@ export default function App() {
   }, [setPokemon, setNext, setPrev])
 
   const pokeCards = pokemon.map((item, index) =>
-    <PokeCard pokeData={item} setSelectedPokemon={setSelectedPokemon} key={index} />
+    <PokeCard pokeData={item} setSelectedPokemon={setSelectedPokemon} key={index} color={index % 4} />
   )
 
   return (
     <SafeAreaView style={styles.wrapper}>
       <View style={styles.container}>
         <Text style={styles.mainTitle}>Listado Pokemón</Text>
+
         <TextInput
           style={styles.searchBar}
           placeholder="Buscar Pokemon"
           value={search}
           onChangeText={text => setSearch(text)}
           onEndEditing={() => searchPokemon(search)} />
+
         <View style={styles.pokemonGrid}>
           <View style={[styles.cardsWrapper, selectedPokemon ? styles.cardsContainerSmall : null]}>
             <View style={styles.cardsContainer}>

@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
         width: "45%",
         textAlign: "center",
         alignItems: "center",
-        backgroundColor: "pink",
         margin: 5,
         padding: 5,
     },
