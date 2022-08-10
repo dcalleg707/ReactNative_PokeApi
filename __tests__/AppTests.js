@@ -7,6 +7,10 @@ import { Button } from "react-native";
 
 jest.useFakeTimers()
 
+/* 
+    I tried to add Enzyme to the project in orther to test state related functionalities
+    but I couldn't get it to work.
+*/
 describe('App', () => {
     it('renders correctly', () => {
         const tree = renderer.create(<App />).toJSON();
