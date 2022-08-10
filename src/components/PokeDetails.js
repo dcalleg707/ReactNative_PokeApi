@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import styles from "@styles/PokeDetails";
 
 export default ({ pokeData, setSelectedPokemon }) => {
 
@@ -8,7 +9,7 @@ export default ({ pokeData, setSelectedPokemon }) => {
     const moves = pokeData.moves?.reduce((prev, cur) => prev + " " + cur, "")
 
     return (
-        <View style={styles.detailsContainer}>
+        <View>
             <TouchableOpacity style={styles.closeDetails} onPress={() => setSelectedPokemon(null)}>
                 <Text>x</Text>
             </TouchableOpacity>
@@ -31,22 +32,3 @@ export default ({ pokeData, setSelectedPokemon }) => {
 
     )
 }
-
-const styles = StyleSheet.create({
-    pokeImage: { width: 50, height: 50 },
-    cardContainer: {
-        width: "100%",
-        textAlign: "center",
-        alignItems: "center",
-        alignSelf: "center",
-    },
-    closeDetails: {
-        position: "absolute",
-        top: 0,
-        right: 0,
-        backgroundColor: "lightgray",
-        paddingHorizontal: 5,
-        zIndex: 1,
-    }
-})
-
